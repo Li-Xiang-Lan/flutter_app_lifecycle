@@ -9,6 +9,12 @@ class MethodChannelFlutterAppLifecycle extends FlutterAppLifecyclePlatform {
   @visibleForTesting
   final methodChannel = const MethodChannel('flutter_app_lifecycle');
 
+  MethodChannelFlutterAppLifecycle(){
+    methodChannel.setMethodCallHandler((call)async{
+      print("kkkkkkk===${call.method}");
+    });
+  }
+
   @override
   Future<String?> getPlatformVersion() async {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');

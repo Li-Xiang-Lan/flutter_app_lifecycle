@@ -78,7 +78,7 @@ public class FlutterAppLifecyclePlugin implements FlutterPlugin, MethodCallHandl
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     if (call.method.equals("getPlatformVersion")) {
-      result.success("Android " + android.os.Build.VERSION.RELEASE);
+      channel.invokeMethod("result", null);
     } else {
       result.notImplemented();
     }
