@@ -1,3 +1,4 @@
+import 'package:flutter_app_lifecycle/app_state_observer.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_app_lifecycle_method_channel.dart';
@@ -23,7 +24,7 @@ abstract class FlutterAppLifecyclePlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+  Future<void> setAppStateObserver(AppStateObserver observer)async{
+    await _instance.setAppStateObserver(observer);
   }
 }

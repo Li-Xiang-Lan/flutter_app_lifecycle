@@ -2,18 +2,32 @@ import Flutter
 import UIKit
 
 public class FlutterAppLifecyclePlugin: NSObject, FlutterPlugin {
+    private let channel: FlutterMethodChannel
+    let registrar: FlutterPluginRegistrar
+    var messager: FlutterBinaryMessenger {
+        return registrar.messenger()
+    }
+    
+    init(registrar: FlutterPluginRegistrar) {
+        self.channel = FlutterMethodChannel(
+            name: "flutter_app_lifecycle",
+            binaryMessenger: registrar.messenger()
+        )
+        self.registrar = registrar
+        super.init()
+    }
+    
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "flutter_app_lifecycle", binaryMessenger: registrar.messenger())
-    let instance = FlutterAppLifecyclePlugin()
-    registrar.addMethodCallDelegate(instance, channel: channel)
-    instance.regsiterNotice()
+      let instance = FlutterAppLifecyclePlugin.init(registrar: registrar)
+      instance.regsiterNotice()
+      registrar.addMethodCallDelegate(instance, channel: instance.channel)
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     
     switch call.method {
     case "getPlatformVersion":
-      result("iOS " + UIDevice.current.systemVersion)
+        channel.invokeMethod("result", arguments: nil)
     default:
       result(FlutterMethodNotImplemented)
     }
@@ -24,17 +38,12 @@ public class FlutterAppLifecyclePlugin: NSObject, FlutterPlugin {
         NotificationCenter.default.addObserver(self, selector: #selector((tb_applicationWillEnterForeground)), name: UIApplication.willEnterForegroundNotification, object: nil)
         }
     
-    // 应用程序进入后台
     @objc func tb_applicationDidEnterBackground() {
-        // 在应用程序进入后台时执行的代码
-        //    FlutterAppLifecyclePlugin.applicationDidEnterBackground(application)
-        print("应用程序进入后台")
+        channel.invokeMethod("result", arguments: ["back":true])
     }
 
     // 应用程序进入前台
     @objc func tb_applicationWillEnterForeground() {
-        // 在应用程序进入前台时执行的代码
-        //    FlutterAppLifecyclePlugin.applicationDidEnterBackground(application)
-        print("应用程序进入前台")
+        channel.invokeMethod("result", arguments: ["back":false])
     }
 }

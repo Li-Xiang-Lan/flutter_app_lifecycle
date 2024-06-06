@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_app_lifecycle/app_state_observer.dart';
 import 'package:flutter_app_lifecycle/flutter_app_lifecycle.dart';
 
 void main() {
@@ -19,11 +20,15 @@ class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   // final _flutterAppLifecyclePlugin = FlutterAppLifecycle();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   initPlatformState();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    FlutterAppLifecycle.instance.setCallObserver(
+      AppStateObserver(call: (back){
+        print("kk=======$back");
+      })
+    );
+  }
 
   // Platform messages are asynchronous, so we initialize in an async method.
   // Future<void> initPlatformState() async {
@@ -55,7 +60,12 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: InkWell(
+            onTap: (){
+
+            },
+            child: Text('Running on: $_platformVersion\n'),
+          ),
         ),
       ),
     );
