@@ -7,6 +7,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -30,34 +33,34 @@ public class FlutterAppLifecyclePlugin implements FlutterPlugin, MethodCallHandl
     ((Application) flutterPluginBinding.getApplicationContext()).registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
       @Override
       public void onActivityCreated(Activity activity, Bundle bundle) {
-        Log.e("qwer","onActivityCreated");
       }
 
       @Override
       public void onActivityStarted(Activity activity) {
         pages++;
-        Log.e("qwer","onActivityStarted"+pages);
         if(pages==1){
           Log.e("qwer","kk====app front");
+          Map map=new HashMap<String,Boolean>();
+          map.put("back",false);
+          channel.invokeMethod("result", map);
         }
       }
 
       @Override
       public void onActivityResumed(Activity activity) {
-        Log.e("qwer","onActivityResumed");
       }
 
       @Override
       public void onActivityPaused(Activity activity) {
-        Log.e("qwer","onActivityPaused");
       }
 
       @Override
       public void onActivityStopped(Activity activity) {
         pages--;
-        Log.e("qwer","onActivityStopped"+pages);
         if(pages<=0){
-          Log.e("qwer","kk====app back");
+          Map map=new HashMap<String,Boolean>();
+          map.put("back",true);
+          channel.invokeMethod("result", map);
         }
       }
 
